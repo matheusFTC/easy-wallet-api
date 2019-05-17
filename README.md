@@ -1,2 +1,2 @@
-# my-wallet
-Carteira de investimentos digital.
+# my-wallet-api
+My Wallet Restful API
