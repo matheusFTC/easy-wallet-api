@@ -1,5 +1,5 @@
-# my-wallet-api
-My Wallet Restful API
+# easy-wallet-api
+Easy Wallet Restful API
 
 ## Como Usar
 
