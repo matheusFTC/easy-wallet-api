@@ -10,7 +10,7 @@ const schema = mongoose.Schema({
   password: {
     type: String,
     trim: true,
-    required: [true, 'Qual a senha de acesso do usuário?']
+    required: [true, 'Qual a senha do usuário?']
   },
   name: {
     type: String,
@@ -19,7 +19,6 @@ const schema = mongoose.Schema({
   },
   isEnabled: {
     type: Boolean,
-    required: [true, 'Este usuário pode usar o sistema?'],
     default: true
   }
 });
