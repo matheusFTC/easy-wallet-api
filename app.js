@@ -4,11 +4,15 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
+const fs = require('fs');
 const logger = require('morgan');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const envLocal = dotenv.parse(fs.readFileSync('.env.local'));
 
-dotenv.config();
+for (let key in envLocal) {
+  process.env[key] = envLocal[key];
+}
 
 let app = express();
 let router = express.Router();
@@ -38,8 +42,9 @@ app.use((err, req, res, next) => {
 
 mongoose.Promise = bluebird;
 
-mongoose.connect(process.env.APP_DB_URL, {
-  useMongoClient: true
+mongoose.connect(process.env.DB_URL || process.env.LOCAL_DB_URL, {
+  useCreateIndex: true,
+  useNewUrlParser: true
 });
 
 process.on('SIGINT', () => {
@@ -48,4 +53,4 @@ process.on('SIGINT', () => {
   });
 });
 
-app.listen(process.env.PORT || process.env.APP_PORT);
+app.listen(process.env.PORT || process.env.LOCAL_PORT);

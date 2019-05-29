@@ -5,9 +5,9 @@ const User = require('../models/user');
 
 const encryption = require('../utils/encryption');
 
-const secret = process.env.APP_AUTH_SECRET;
-const amount = process.env.APP_AUTH_AMOUNT;
-const duration = process.env.APP_AUTH_DURATION;
+const secret = process.env.AUTH_SECRET || process.env.LOCAL_AUTH_SECRET;
+const amount = process.env.AUTH_AMOUNT || process.env.LOCAL_AUTH_AMOUNT;
+const duration = process.env.AUTH_DURATION || process.env.LOCAL_AUTH_DURATION;
 
 let controller = {
   authenticate: (req, res) => {
