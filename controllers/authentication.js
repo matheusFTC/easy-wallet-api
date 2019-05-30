@@ -23,18 +23,17 @@ let controller = {
           let expires = moment().add(amount, duration).valueOf();
 
           let token = jwt.encode({
-            iss: user._id,
+            iss: user.email,
             exp: expires
           }, secret);
 
           res.status(200).json({
             expires,
-            token,
-            user
+            token
           });
         } else {
           res.status(401).json({
-            error: 'Não autorizado.'
+            error: 'Não autenticado.'
           });
         }
       }).catch((err) => {
@@ -58,14 +57,14 @@ let controller = {
             error: 'Acesso expirado.'
           });
         } else {
-          User.findById({
-            '_id': decoded.iss
-          }).then((employee) => {
-            if (employee) {
+          User.findOne({
+            'email': decoded.iss
+          }).then((user) => {
+            if (user) {
               next();
             } else {
               res.status(401).json({
-                error: 'Não autorizado.'
+                error: 'Não autenticado.'
               });
             }
           }).catch((err) => {

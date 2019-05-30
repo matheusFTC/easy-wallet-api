@@ -37,6 +37,7 @@ let controller = {
     let data = {
       email: req.body.email,
       name: req.body.name,
+      type: req.body.type,
       isEnabled: req.body.isEnabled
     };
 

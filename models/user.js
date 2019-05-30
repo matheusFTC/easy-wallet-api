@@ -17,6 +17,11 @@ const schema = mongoose.Schema({
     trim: true,
     required: [true, 'Qual o nome do usuário?']
   },
+  type: {
+    type: String,
+    enum: ['USER', 'ADMIN'],
+    default: 'USER'
+  },
   isEnabled: {
     type: Boolean,
     default: true
