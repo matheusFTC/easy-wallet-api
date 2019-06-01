@@ -29,7 +29,8 @@ let controller = {
 
           res.status(200).json({
             expires,
-            token
+            token,
+            user
           });
         } else {
           res.status(401).json({
