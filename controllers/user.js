@@ -31,7 +31,7 @@ let controller = {
         res.status(500).json(err);
       });
   },
-  save: (req, res) => {
+  save: async (req, res) => {
     let _id = req.params._id;
 
     let data = {
@@ -100,18 +100,28 @@ let controller = {
           res.status(500).json(err);
         });
     } else {
-      data.password = encryption.encrypt(req.body.password);
+      let exist = await User.findOne({
+        'email': data.email
+      });
 
-      let user = new User(data);
-
-      user
-        .save()
-        .then(() => {
-          res.status(201).json(user);
-        })
-        .catch(err => {
-          res.status(500).json(err);
+      if (exist) {
+        res.status(412).json({
+          error: 'E-mail já utilizado por outro usuário.'
         });
+      } else {
+        data.password = encryption.encrypt(req.body.password);
+
+        let user = new User(data);
+
+        user
+          .save()
+          .then(() => {
+            res.status(201).json(user);
+          })
+          .catch(err => {
+            res.status(500).json(err);
+          });
+      }
     }
   },
   remove: async (req, res) => {
