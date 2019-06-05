@@ -62,13 +62,11 @@ let controller = {
                     _id,
                     { $set: removeEmpty(data), $inc: { __v: 1 } },
                     { new: true, runValidators: true }
-                  )
-                    .then(employee => {
-                      res.status(200).json(employee);
-                    })
-                    .catch(err => {
-                      res.status(500).json(err);
-                    });
+                  ).then(user => {
+                    res.status(200).json(user);
+                  }).catch(err => {
+                    res.status(500).json(err);
+                  });
                 } else {
                   res.status(403).json({
                     error: 'A nova senha fornecida não foi confirmada corretamente.'
