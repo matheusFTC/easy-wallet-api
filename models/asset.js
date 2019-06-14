@@ -6,6 +6,10 @@ const schema = mongoose.Schema({
     unique: true,
     trim: true,
     required: [true, 'Qual o código do ativo?']
+  },
+  type: {
+    type: String,
+    enum: ['F', 'A']
   }
 });
 
