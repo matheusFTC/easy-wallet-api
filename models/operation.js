@@ -28,6 +28,10 @@ const schema = mongoose.Schema({
   },
   effectiveTotal: {
     type: Number
+  },
+  isEnabled: {
+    type: Boolean,
+    default: true
   }
 });
 

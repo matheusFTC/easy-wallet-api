@@ -9,7 +9,7 @@ const schema = mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['F', 'A']
+    enum: ['F', 'A', 'C', 'M', 'O']
   }
 });
 

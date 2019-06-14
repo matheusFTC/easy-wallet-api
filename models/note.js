@@ -28,6 +28,15 @@ const schema = mongoose.Schema({
   total: {
     type: Number,
     required: [true, 'Qual o total desta nota?']
+  },
+  status: {
+    type: String,
+    enum: ['E', 'F'],
+    default: 'E'
+  },
+  isEnabled: {
+    type: Boolean,
+    default: true
   }
 });
 

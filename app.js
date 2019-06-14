@@ -18,10 +18,12 @@ let app = express();
 let router = express.Router();
 
 const authentication = require('./routes/authentication');
+const note = require('./routes/note');
 const user = require('./routes/user');
 
 router.use('/authentication', authentication);
 router.use('/users', user);
+router.use('/notes', note);
 
 app.use(express.static('public'));
 app.use(cors());
