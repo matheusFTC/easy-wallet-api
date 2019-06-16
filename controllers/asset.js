@@ -31,7 +31,9 @@ let controller = {
     let _id = req.params._id;
 
     let data = {
-      symbol: req.body.symbol
+      symbol: req.body.symbol,
+      type: req.body.type,
+      isEnabled: req.body.isEnabled
     };
 
     if (_id) {

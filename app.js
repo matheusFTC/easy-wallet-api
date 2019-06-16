@@ -17,13 +17,15 @@ for (let key in envLocal) {
 let app = express();
 let router = express.Router();
 
+const asset = require('./routes/asset');
 const authentication = require('./routes/authentication');
 const note = require('./routes/note');
 const user = require('./routes/user');
 
+router.use('/assets', asset);
 router.use('/authentication', authentication);
-router.use('/users', user);
 router.use('/notes', note);
+router.use('/users', user);
 
 app.use(express.static('public'));
 app.use(cors());

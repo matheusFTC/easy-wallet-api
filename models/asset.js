@@ -9,7 +9,12 @@ const schema = mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['F', 'A', 'C', 'M', 'O']
+    enum: ['F', 'A', 'C', 'M', 'O'],
+    required: [true, 'Qual o tipo do ativo?']
+  },
+  isEnabled: {
+    type: Boolean,
+    default: true
   }
 });
 
