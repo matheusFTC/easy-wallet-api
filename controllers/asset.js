@@ -6,7 +6,21 @@ const removeEmpty = require('../utils/remove-empyt');
 
 let controller = {
   findAll: (req, res) => {
-    Asset.find(req.query)
+    let query = {};
+
+    if (req.query.symbol) {
+      query.symbol = { $regex: new RegExp('^' + req.query.symbol.toLowerCase(), 'i') };
+    }
+
+    if (req.query.type) {
+      query.type = { $regex: new RegExp('^' + req.query.type.toLowerCase(), 'i') };
+    }
+
+    if (req.query.isEnabled) {
+      query.isEnabled = req.query.isEnabled;
+    }
+
+    Asset.find(query)
       .then(assets => {
         if (assets.length === 0 && req.query.symbol) {
           yahooFinance.quote({
@@ -86,9 +100,15 @@ let controller = {
         .then(asset => {
           if (asset) {
             Asset.findByIdAndUpdate(
-              _id,
-              { $set: removeEmpty(data), $inc: { __v: 1 } },
-              { new: true, runValidators: true }
+              _id, {
+                $set: removeEmpty(data),
+                $inc: {
+                  __v: 1
+                }
+              }, {
+                new: true,
+                runValidators: true
+              }
             ).then(asset => {
               res.status(200).json(asset);
             }).catch(err => {
@@ -127,7 +147,9 @@ let controller = {
           message: 'Ativo removido com sucesso.'
         });
       } catch (error) {
-        res.status(500).json({ error });
+        res.status(500).json({
+          error
+        });
       }
     } else {
       res.status(404).json({
