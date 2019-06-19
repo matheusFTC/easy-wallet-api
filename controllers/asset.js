@@ -1,3 +1,5 @@
+const yahooFinance = require('yahoo-finance');
+
 const Asset = require('../models/asset');
 
 const removeEmpty = require('../utils/remove-empyt');
@@ -6,7 +8,50 @@ let controller = {
   findAll: (req, res) => {
     Asset.find(req.query)
       .then(assets => {
-        res.status(200).json(assets);
+        if (assets.length === 0 && req.query.symbol) {
+          yahooFinance.quote({
+            symbol: `${req.query.symbol}.SA`,
+            modules: ['price']
+          }, (err, snapshot) => {
+            if (err) {
+              res.status(500).json({
+                message: 'Não foi possível encontrar o ativo na API externa.'
+              });
+            } else {
+              let infor = snapshot.price;
+              let symbol = infor.symbol.substring(0, infor.symbol.length - 3);
+              let shortName = infor.shortName;
+              let longName = infor.longName;
+              let type;
+
+              if (infor.shortName.toLocaleLowerCase().indexOf('fii')) {
+                type = 'F';
+              } else {
+                type = 'A';
+              }
+
+              let data = {
+                symbol,
+                shortName,
+                longName,
+                type
+              };
+
+              let asset = new Asset(data);
+
+              asset
+                .save()
+                .then(() => {
+                  res.status(201).json(new Array(asset));
+                })
+                .catch(err => {
+                  res.status(500).json(err);
+                });
+            }
+          });
+        } else {
+          res.status(200).json(assets);
+        }
       })
       .catch(err => {
         res.status(500).json(err);

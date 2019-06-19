@@ -7,6 +7,12 @@ const schema = mongoose.Schema({
     trim: true,
     required: [true, 'Qual o código do ativo?']
   },
+  shortName: {
+    type: String
+  },
+  longName: {
+    type: String
+  },
   type: {
     type: String,
     enum: ['F', 'A', 'C', 'M', 'O'],

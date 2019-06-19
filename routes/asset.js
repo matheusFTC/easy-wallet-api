@@ -6,7 +6,7 @@ const controller = require('../controllers/asset');
 
 const validate = require('../controllers/authentication').validate;
 
-router.get('/', validate, controller.findAll);
+router.get('/', controller.findAll);
 router.get('/:_id', validate, controller.findById);
 router.post('/', validate, controller.save);
 router.put('/:_id', validate, controller.save);
