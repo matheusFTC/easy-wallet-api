@@ -10,7 +10,7 @@ let controller = {
       .then(assets => {
         if (assets.length === 0 && req.query.symbol) {
           yahooFinance.quote({
-            symbol: `${req.query.symbol}.SA`,
+            symbol: `${req.query.symbol.toUpperCase()}.SA`,
             modules: ['price']
           }, (err, snapshot) => {
             if (err) {
@@ -18,13 +18,13 @@ let controller = {
                 message: 'Não foi possível encontrar o ativo na API externa.'
               });
             } else {
-              let infor = snapshot.price;
-              let symbol = infor.symbol.substring(0, infor.symbol.length - 3);
-              let shortName = infor.shortName;
-              let longName = infor.longName;
+              let price = snapshot.price;
+              let symbol = price.symbol.substring(0, price.symbol.length - 3);
+              let shortName = price.shortName;
+              let longName = price.longName;
               let type;
 
-              if (infor.shortName.toLocaleLowerCase().indexOf('fii')) {
+              if (price.shortName.toLowerCase().indexOf('fii') > -1) {
                 type = 'F';
               } else {
                 type = 'A';
