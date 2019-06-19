@@ -34,7 +34,7 @@ let controller = {
             } else {
               let price = snapshot.price;
               let symbol = price.symbol.substring(0, price.symbol.length - 3);
-              let shortName = price.shortName;
+              let shortName = price.shortName.replace(/\s+/g, " ").trim();
               let longName = price.longName;
               let type;
 
