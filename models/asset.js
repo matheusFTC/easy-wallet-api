@@ -21,6 +21,9 @@ const schema = mongoose.Schema({
   isEnabled: {
     type: Boolean,
     default: true
+  },
+  currentPrice: {
+    type: Number
   }
 });
 

@@ -3,6 +3,7 @@ const yahooFinance = require('yahoo-finance');
 const Asset = require('../models/asset');
 
 const removeEmpty = require('../utils/remove-empyt');
+const asyncForEach = require('../utils/async-foreach');
 
 let controller = {
   findAll: (req, res) => {
@@ -20,8 +21,14 @@ let controller = {
       query.isEnabled = req.query.isEnabled;
     }
 
+    const page = req.query.page ? Number(req.query.page) : 0;
+    const perPage = req.query.perPage ? Number(req.query.perPage) : 10;
+
     Asset.find(query)
-      .then(assets => {
+      .limit(perPage)
+      .skip(perPage * page)
+      .sort({ symbol: 'asc' })
+      .then(async (assets) => {
         if (assets.length === 0 && req.query.symbol) {
           yahooFinance.quote({
             symbol: `${req.query.symbol.toUpperCase()}.SA`,
@@ -32,10 +39,12 @@ let controller = {
                 message: 'Não foi possível encontrar o ativo na API externa.'
               });
             } else {
-              let price = snapshot.price;
-              let symbol = price.symbol.substring(0, price.symbol.length - 3);
-              let shortName = price.shortName.replace(/\s+/g, " ").trim();
-              let longName = price.longName;
+              const price = snapshot.price;
+              const symbol = price.symbol.substring(0, price.symbol.length - 3);
+              const shortName = price.shortName.replace(/\s+/g, ' ').trim();
+              const longName = price.longName;
+              const currentPrice = price.regularMarketPrice;
+
               let type;
 
               if (price.shortName.toLowerCase().indexOf('fii') > -1) {
@@ -56,6 +65,8 @@ let controller = {
               asset
                 .save()
                 .then(() => {
+                  asset.currentPrice = currentPrice;
+
                   res.status(201).json(new Array(asset));
                 })
                 .catch(err => {
@@ -64,6 +75,15 @@ let controller = {
             }
           });
         } else {
+          await asyncForEach(assets, async (asset) => {
+            let snapshot = await yahooFinance.quote({
+              symbol: `${asset.symbol.toUpperCase()}.SA`,
+              modules: ['price']
+            });
+
+            asset.currentPrice = snapshot.price.regularMarketPrice;
+          });
+
           res.status(200).json(assets);
         }
       })
