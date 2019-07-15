@@ -35,9 +35,7 @@ let controller = {
             modules: ['price']
           }, (err, snapshot) => {
             if (err) {
-              res.status(500).json({
-                message: 'Não foi possível encontrar o ativo na API externa.'
-              });
+              res.status(200).json([]);
             } else {
               const price = snapshot.price;
               const symbol = price.symbol.substring(0, price.symbol.length - 3);
